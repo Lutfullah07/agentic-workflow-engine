@@ -11,6 +11,7 @@ I built this to get hands-on with LLM APIs and workflow tools like n8n, Make and
 ![App screenshot](screenshots/home.png)
 ![Generated workflow](screenshots/result.png)
 
+
 ## Try it
 
 Run it locally, paste a Gemini API key in the sidebar, and click one of these starters:
@@ -25,6 +26,32 @@ Or type your own, for example:
 
 > What is the difference between n8n, Make and Zapier, and which one suits customer support automation?
 
+## How it works
+
+```
+Your prompt
+    |
+    v
+Mode picks a system prompt (Direct / Pipeline / Payload)
+    |
+    v
+App asks Gemini which models your key can use   (cached for an hour)
+    |
+    v
+Best available model is picked from a preference list
+    |
+    v
+generateContent call  --- fails (404 / 400 / 5xx)? ---> try the next model
+    |
+    v
+Reply shown in the chat, with the model name under it
+```
+
+1. The sidebar mode decides the system prompt. For example, Workflow Pipeline asks for trigger, steps, data mapping, error handling and scaling notes.
+2. The app calls the `models` endpoint with your key and keeps only models that support `generateContent`.
+3. It picks the first match from a short preference list, then falls back to any other Flash model if none match.
+4. The last 12 messages are sent with the system prompt, so follow-up questions have context.
+5. If a model call returns 404, 400 or a server error, the app tries the next model instead of crashing. Rate limits (429) and blocked responses show a clear error message.
 ## Modes
 
 | Mode | Best for | Output |
