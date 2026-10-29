@@ -65,10 +65,6 @@ README.md          this file
 
 Python, Streamlit, and the Gemini API (called with `requests`).
 
-## Note
-
-I used AI tools (Claude and Gemini) while building this, and I tested and ran the app myself.
-
 ## Next
 
 - [ ] Send generated payloads to a real n8n or Make webhook
